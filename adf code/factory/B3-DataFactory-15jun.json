@@ -1,0 +1,15 @@
+{
+	"name": "B3-DataFactory-15jun",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "9684bb82-4635-466d-8590-03758ea20038",
+		"tenantId": "e7b70737-1896-4f3a-87d9-4531c10fe905"
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"name": "DS_MySqlTable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_OnPremiseMySql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "MySqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "`courses`"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

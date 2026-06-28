@@ -1,0 +1,84 @@
+{
+	"name": "dataflowActivities",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_SalesfilesOnly",
+						"type": "DatasetReference"
+					},
+					"name": "sourcesalesfiles"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Transformation_datafile",
+						"type": "DatasetReference"
+					},
+					"name": "sink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "selectfewcolumns"
+				},
+				{
+					"name": "filterCondition"
+				},
+				{
+					"name": "splitUK"
+				},
+				{
+					"name": "aggregate1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          InvoiceNo as integer,",
+				"          StockCode as integer,",
+				"          Description as string,",
+				"          Quantity as integer,",
+				"          InvoiceDate as date,",
+				"          UnitPrice as double,",
+				"          CustomerID as integer,",
+				"          Country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     partitionBy('hash', 1)) ~> sourcesalesfiles",
+				"sourcesalesfiles select(mapColumn(",
+				"          InvoiceNo,",
+				"          Description,",
+				"          InvoiceDate,",
+				"          UnitPrice,",
+				"          CustomerID,",
+				"          Country",
+				"     ),",
+				"     partitionBy('hash', 1),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectfewcolumns",
+				"selectfewcolumns filter(InvoiceNo!=537668,",
+				"     partitionBy('hash', 1)) ~> filterCondition",
+				"filterCondition split(Country==\"United Kingdom\",",
+				"     Country=='Germany',",
+				"     disjoint: false,",
+				"     partitionBy('hash', 1)) ~> splitUK@(UK, Germany, Others)",
+				"splitUK@UK aggregate(groupBy(InvoiceNo),",
+				"     UnitPrice = sum(UnitPrice),",
+				"     partitionBy('hash', 1)) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink"
+			]
+		}
+	}
+}

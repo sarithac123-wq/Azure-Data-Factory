@@ -1,0 +1,25 @@
+{
+	"name": "TG_selectedfilesonly_schedule",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "3_OnlySales_FilesCSV",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2026-06-19T13:10:00",
+				"endTime": "2026-06-20T07:31:00",
+				"timeZone": "India Standard Time"
+			}
+		}
+	}
+}
